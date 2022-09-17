@@ -103,19 +103,11 @@ class _QuizContainerState extends State<QuizContainer> {
                 padding: const EdgeInsets.only(right: 16.0, left: 16, top: 4, bottom: 4),
                 child: Row(
                   children: [
-                    const Icon(Icons.person),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Text("(${mainState.players[index].points})   ${mainState.players[index].name}"),
-                    Spacer(),
                     IconButton(
                       onPressed: () {
                         for (var i = 0; i < mainState.players.length; i++) {
                           if (i == index) {
-                            setState(() {
-                              mainState.players[i].points = mainState.players[i].points + 4;
-                            });
+                            rightAnswer(i);
                           }
                         }
                       },
@@ -129,20 +121,39 @@ class _QuizContainerState extends State<QuizContainer> {
                       onPressed: () {
                         for (var i = 0; i < mainState.players.length; i++) {
                           if (i != index) {
-                            setState(() {
-                              mainState.players[i].points = mainState.players[i].points + 1;
-                            });
+                            wrongAnswer(i);
                           }
                         }
                       },
                       icon: Icon(Icons.error),
                       color: Colors.red,
                     ),
+                    SizedBox(
+                      width: 32,
+                    ),
+                    const Icon(Icons.person),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text("(${mainState.players[index].points})   ${mainState.players[index].name}"),
+                    Spacer(),
                   ],
                 ),
               );
             });
       },
     );
+  }
+
+  void wrongAnswer(int i) {
+    return setState(() {
+      mainState.players[i].points = mainState.players[i].points + 1;
+    });
+  }
+
+  void rightAnswer(int i) {
+    return setState(() {
+      mainState.players[i].points = mainState.players[i].points + 4;
+    });
   }
 }

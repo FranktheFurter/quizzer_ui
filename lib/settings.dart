@@ -17,6 +17,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final fieldText = TextEditingController();
+  final FocusNode focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -54,21 +55,19 @@ class _SettingsState extends State<Settings> {
                               child: TextField(
                             onChanged: (value) => mainState.word = value,
                             controller: fieldText,
+                            focusNode: focusNode,
                             decoration: InputDecoration(
                               labelText: "Name",
                               border: OutlineInputBorder(),
                             ),
+                            onSubmitted: (value) {
+                              addPlayer();
+                            },
                           )),
                           SizedBox(width: 32),
                           ElevatedButton.icon(
                               onPressed: () {
-                                mainState.players.add(Player(name: mainState.word, points: 0));
-
-                                setState(() {
-                                  mainState.number = 0;
-                                  mainState.word = "";
-                                  fieldText.clear();
-                                });
+                                addPlayer();
                               },
                               icon: Icon(Icons.add),
                               label: Text("Add")),
@@ -81,7 +80,7 @@ class _SettingsState extends State<Settings> {
                                   }
                                 });
                               },
-                              icon: Icon(Icons.add),
+                              icon: Icon(Icons.restore),
                               label: Text("Reset")),
                         ],
                       ),
@@ -92,6 +91,17 @@ class _SettingsState extends State<Settings> {
         );
       },
     );
+  }
+
+  void addPlayer() {
+    mainState.players.add(Player(name: mainState.word, points: 0));
+
+    setState(() {
+      mainState.number = 0;
+      mainState.word = "";
+      fieldText.clear();
+    });
+    focusNode.requestFocus();
   }
 
   Widget SettingsContainer() {
@@ -118,7 +128,10 @@ class _SettingsState extends State<Settings> {
             icon: Icon(Icons.delete),
             label: Text("Delete")),
         SizedBox(width: 32),
-        Center(child: Text(mainState.players[index].name + "   " + mainState.players[index].points.toString(), style: TextStyle(fontSize: 24, color: Colors.white))),
+        Text(mainState.players[index].name + "   " + mainState.players[index].points.toString(), style: TextStyle(fontSize: 24, color: Colors.white)),
+        SizedBox(
+          width: 32,
+        ),
       ]),
     );
   }
