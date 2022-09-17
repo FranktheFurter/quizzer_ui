@@ -1,20 +1,21 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:quizzer_ui/mainstate.dart';
 import 'package:quizzer_ui/model.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
-class Fizzbuzz extends StatefulWidget {
-  const Fizzbuzz({
+class Quizzer extends StatefulWidget {
+  const Quizzer({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<Fizzbuzz> createState() => _FizzbuzzState();
+  State<Quizzer> createState() => _QuizzerState();
 }
 
-class _FizzbuzzState extends State<Fizzbuzz> {
+class _QuizzerState extends State<Quizzer> {
   ScrollController _scrollController = ScrollController();
 
   @override
@@ -24,7 +25,7 @@ class _FizzbuzzState extends State<Fizzbuzz> {
       children: [
         SizedBox(
           height: 64,
-          child: FittedBox(child: Text("Fizzbuzz")),
+          child: FittedBox(child: Text("Quizzer")),
         ),
         Expanded(
           child: Padding(
@@ -35,37 +36,10 @@ class _FizzbuzzState extends State<Fizzbuzz> {
                 border: Border.all(),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
-              child: FizzContainer(_scrollController),
+              child: QuizContainer(),
             ),
           ),
         ),
-        Container(
-            height: 64,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  child: Text("Start"),
-                  onPressed: () {
-                    _scrollController.animateTo(
-                      _scrollController.position.maxScrollExtent,
-                      duration: Duration(seconds: 180),
-                      curve: Curves.linear,
-                    );
-                  },
-                ),
-                ElevatedButton(
-                  child: Text("Reset"),
-                  onPressed: () {
-                    _scrollController.animateTo(
-                      _scrollController.position.minScrollExtent,
-                      duration: Duration(seconds: 1),
-                      curve: Curves.linear,
-                    );
-                  },
-                )
-              ],
-            ))
       ],
     );
   }
@@ -107,5 +81,68 @@ class _FizzbuzzState extends State<Fizzbuzz> {
       ))),
       Expanded(child: Center(child: Text(replacementText, style: TextStyle(fontSize: 24, color: matchFound ? Colors.red : Colors.white)))),
     ]);
+  }
+}
+
+class QuizContainer extends StatefulWidget {
+  const QuizContainer({Key? key}) : super(key: key);
+
+  @override
+  State<QuizContainer> createState() => _QuizContainerState();
+}
+
+class _QuizContainerState extends State<QuizContainer> {
+  @override
+  Widget build(BuildContext context) {
+    return Observer(
+      builder: (_) {
+        return ListView.builder(
+            itemCount: mainState.players.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 16.0, left: 16, top: 4, bottom: 4),
+                child: Row(
+                  children: [
+                    const Icon(Icons.person),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    Text("(${mainState.players[index].points})   ${mainState.players[index].name}"),
+                    Spacer(),
+                    IconButton(
+                      onPressed: () {
+                        for (var i = 0; i < mainState.players.length; i++) {
+                          if (i == index) {
+                            setState(() {
+                              mainState.players[i].points = mainState.players[i].points + 4;
+                            });
+                          }
+                        }
+                      },
+                      icon: Icon(Icons.check),
+                      color: Colors.green,
+                    ),
+                    SizedBox(
+                      width: 16,
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        for (var i = 0; i < mainState.players.length; i++) {
+                          if (i != index) {
+                            setState(() {
+                              mainState.players[i].points = mainState.players[i].points + 1;
+                            });
+                          }
+                        }
+                      },
+                      icon: Icon(Icons.error),
+                      color: Colors.red,
+                    ),
+                  ],
+                ),
+              );
+            });
+      },
+    );
   }
 }

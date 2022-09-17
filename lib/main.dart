@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                 physics: NeverScrollableScrollPhysics(),
                 controller: _tabController,
                 children: [
-                  Fizzbuzz(),
+                  Quizzer(),
                   Settings(),
                 ],
               ),
@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.animation),
-              label: 'Fizzbuzz',
+              label: 'Quiz',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),

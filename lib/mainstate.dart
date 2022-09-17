@@ -11,6 +11,8 @@ abstract class _MainStateBase with Store {
     WordNumberMatch(name: 'Buzz', number: 5),
   ]);
 
+  ObservableList<Player> players = ObservableList<Player>.of([]);
+
   @computed
   ObservableList<WordNumberMatch> get matchesToDisplay {
     //sort the matches by the number and return the list
